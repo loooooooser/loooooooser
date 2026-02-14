@@ -2,23 +2,23 @@ name: Generate Snake
 
 on:
   schedule:
-    - cron: "0 */12 * * *" # every 12 hours
+    - cron: "0 */12 * * *"  # every 12 hours
   workflow_dispatch:
 
 permissions:
-  contents: write  # required so GitHub can push files
+  contents: write  # required to push files
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout your repo
+      # 1️⃣ Checkout the repo
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # fetch full history to avoid push errors
 
-      # Generate the snake SVGs
+      # 2️⃣ Generate snake SVGs
       - uses: Platane/snk@v3
         with:
           github_user_name: loooooooser
@@ -26,10 +26,11 @@ jobs:
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      # Push the snake to a separate branch (snake-output)
+      # 3️⃣ Push to a separate branch (snake-output)
       - uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: snake-output
           build_dir: dist
+          force_orphan: true  # overwrites branch safely
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
